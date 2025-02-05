@@ -1,0 +1,6 @@
+name = "codeai-assistant"
+compatibility_date = "2023-01-01"
+
+[build]
+command = "npm run build"
+output_dir = "dist" 
