@@ -214,6 +214,21 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+
+      {/* Add this at the bottom of the main section */}
+      <div className="text-center py-8 border-t border-gray-800 mt-auto">
+        <p className="text-gray-400 text-sm">
+          Coded and developed by{' '}
+          <a 
+            href="https://github.com/likith-yadav" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Likith Yadav
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
