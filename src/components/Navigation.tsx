@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Code2, Sparkles, Bug, LogOut, Menu, X } from 'lucide-react';
+import { Code2, Sparkles, Bug, LogOut, Menu, X, Clock } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navigation() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [showMobileChats, setShowMobileChats] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -33,12 +34,20 @@ export default function Navigation() {
           </Link>
 
           {/* Mobile menu button */}
-          <button 
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-gray-400 hover:text-white"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setShowMobileChats(!showMobileChats)}
+              className="md:hidden p-2 text-gray-400 hover:text-white"
+            >
+              <Clock className="w-6 h-6" />
+            </button>
+            <button 
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 text-gray-400 hover:text-white"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center gap-6">
