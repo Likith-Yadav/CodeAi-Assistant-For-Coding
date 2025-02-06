@@ -17,28 +17,41 @@ export default function CodeGenerator() {
   const getEnhancedPrompt = (userPrompt: string, type: 'complete' | 'specific') => {
     if (type === 'complete') {
       return `
-Please provide a complete implementation guide for: ${userPrompt}
+Please provide a complete implementation exactly matching the requested technologies for: ${userPrompt}
 
-Include the following sections:
-1. Project Setup:
-   - Required commands to create the project
-   - Essential dependencies to install
+Important Rules:
+- DO NOT change or suggest different technologies than what was requested
+- DO NOT add frameworks unless specifically asked
+- Provide ONLY the requested implementation
 
-2. Project Structure:
-   - Directory structure
-   - Key files needed
-   - File organization
+Required Output Format:
+1. File Structure:
+   List all required files with their paths
 
-3. Implementation Steps:
-   - Step-by-step guide with complete code for each file
-   - Detailed explanations for each component
-   - Configuration details if needed
+2. Complete Code:
+   Provide the FULL code for each file:
 
-4. Running Instructions:
-   - How to run the project
-   - Any environment setup needed
+   filename: index.html
+   \`\`\`html
+   // Complete HTML code here
+   \`\`\`
 
-Please provide the complete code for each file with proper file paths and explanations.
+   filename: styles.css
+   \`\`\`css
+   // Complete CSS code here
+   \`\`\`
+
+   filename: script.js
+   \`\`\`javascript
+   // Complete JavaScript code here
+   \`\`\`
+
+3. Setup Instructions:
+   - Simple steps to run the project
+   - Any browser requirements
+   - How to open/use the application
+
+Note: Stick EXACTLY to the technologies mentioned in the prompt without suggesting alternatives.
 `;
     }
 
