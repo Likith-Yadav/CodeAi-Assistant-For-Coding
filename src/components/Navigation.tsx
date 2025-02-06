@@ -1,13 +1,17 @@
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Code2, Sparkles, Bug, LogOut, Menu, X, Clock } from 'lucide-react';
-import { useState } from 'react';
 
-export default function Navigation() {
+type NavigationProps = {
+  showMobileChats: boolean;
+  setShowMobileChats: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function Navigation({ showMobileChats, setShowMobileChats }: NavigationProps) {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [showMobileChats, setShowMobileChats] = useState(false);
 
   const handleLogout = async () => {
     try {

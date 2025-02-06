@@ -25,7 +25,6 @@ interface ChatHistoryContentProps {
 
 export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
   const { currentUser } = useAuth();
-  const location = useLocation();
   const [chats, setChats] = useState<ChatItem[]>([]);
 
   const getIcon = (type: string) => {
