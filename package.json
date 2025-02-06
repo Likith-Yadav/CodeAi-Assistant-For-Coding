@@ -11,6 +11,8 @@
     "pages:deploy": "npm run build && wrangler pages deploy dist"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.22.11",
+    "@clerk/nextjs": "^5.7.5",
     "@google/generative-ai": "^0.2.1",
     "firebase": "^11.2.0",
     "lucide-react": "^0.344.0",

@@ -4,14 +4,14 @@ import { generateCode } from '../lib/gemini';
 import { CodeBlock } from '../components/CodeBlock';
 import ReactMarkdown from 'react-markdown';
 import { saveChat } from '../lib/firebase';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@clerk/clerk-react';
 
 export default function Debugger() {
   const [code, setCode] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { currentUser } = useAuth();
+  const { userId } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +24,8 @@ export default function Debugger() {
       setResponse(result);
       
       // Save to chat history
-      if (currentUser) {
-        await saveChat(currentUser.uid, {
+      if (userId) {
+        await saveChat(userId, {
           type: 'debug',
           title: code.slice(0, 50) + (code.length > 50 ? '...' : ''),
           prompt: code,

@@ -1,149 +1,61 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { UserPlus, Mail, Lock, ArrowLeft, Chrome } from 'lucide-react';
+import { SignUp } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 export default function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signup, signInWithGoogle } = useAuth();
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (password !== confirmPassword) {
-      return setError('Passwords do not match');
-    }
-
-    try {
-      setError('');
-      setLoading(true);
-      await signup(email, password);
-      navigate('/');
-    } catch (error) {
-      setError('Failed to create an account');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      setError('');
-      setLoading(true);
-      await signInWithGoogle();
-      navigate('/');
-    } catch (error) {
-      setError('Failed to sign in with Google');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen gradient-bg text-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md p-8 rounded-2xl bg-gray-900/50 backdrop-blur-xl border border-gray-800 relative">
-        <Link 
-          to="/" 
-          className="absolute left-8 top-8 p-2 text-gray-400 hover:text-white transition-colors hover:bg-white/10 rounded-xl"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-
-        <div className="mb-8 text-center pt-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500/20 mb-6">
-            <UserPlus className="w-8 h-8 text-blue-400" />
-          </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+    <div className="min-h-screen gradient-bg text-white flex items-center justify-center p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-md mx-auto">
+        <div className="mb-6 md:mb-8 text-center">
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-4 md:mb-6 text-sm md:text-base"
+          >
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+            <span>Back to Home</span>
+          </Link>
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent mb-2 md:mb-3">
             Create Account
           </h1>
-          <p className="text-gray-400 mt-2">Join us and start coding with AI</p>
+          <p className="text-gray-400 text-sm md:text-base">Join us and start building amazing things</p>
         </div>
 
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-500/20 text-red-300 border border-red-500/20">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-gray-400 mb-2 text-sm">Email Address</label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-3.5 w-5 h-5 text-gray-500" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-12 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-500"
-                placeholder="Enter your email"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-gray-400 mb-2 text-sm">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-3.5 w-5 h-5 text-gray-500" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-12 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-500"
-                placeholder="Create a password"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-gray-400 mb-2 text-sm">Confirm Password</label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-3.5 w-5 h-5 text-gray-500" />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="w-full px-12 py-3 bg-gray-900/50 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-500"
-                placeholder="Confirm your password"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 bg-blue-500 rounded-xl font-semibold text-lg shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 disabled:hover:bg-blue-500"
-          >
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
-
-        <div className="mt-6 relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-700"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gray-900/50 text-gray-400">Or continue with</span>
-          </div>
+        <div className="bg-gray-950/50 backdrop-blur-xl border border-gray-800/50 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-2xl shadow-blue-500/5">
+          <SignUp 
+            appearance={{
+              elements: {
+                formButtonPrimary: 
+                  "bg-blue-600 hover:bg-blue-500 text-white rounded-lg md:rounded-xl px-4 py-2 font-semibold transition-all text-sm md:text-base",
+                card: "bg-transparent shadow-none",
+                headerTitle: "hidden",
+                headerSubtitle: "hidden",
+                socialButtonsBlockButton: 
+                  "bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 text-white rounded-lg md:rounded-xl transition-all text-sm md:text-base py-2.5 px-4",
+                formFieldInput: 
+                  "bg-gray-900/50 border border-gray-800/50 rounded-lg md:rounded-xl text-white placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm md:text-base py-2 px-3",
+                footerAction: "text-gray-400 text-sm md:text-base",
+                dividerLine: "bg-gray-800",
+                dividerText: "text-gray-500 bg-transparent text-sm md:text-base",
+                formFieldLabel: "text-gray-400 text-sm md:text-base",
+                identityPreviewText: "text-gray-400 text-sm md:text-base",
+                identityPreviewEditButton: "text-blue-400 hover:text-blue-300 text-sm md:text-base",
+                formResendCodeLink: "text-blue-400 hover:text-blue-300 text-sm md:text-base",
+                alert: "bg-red-500/20 border border-red-500/20 text-red-300 text-sm md:text-base p-3 rounded-lg",
+                alertText: "text-red-300 text-sm md:text-base",
+                formFieldWarningText: "text-red-300 text-sm md:text-base",
+                formFieldErrorText: "text-red-300 text-sm md:text-base",
+                formFieldSuccessText: "text-green-300 text-sm md:text-base",
+                otpCodeFieldInput: "!w-10 md:!w-12 !h-10 md:!h-12 text-center text-sm md:text-base",
+              },
+              layout: {
+                socialButtonsPlacement: "bottom",
+                socialButtonsVariant: "blockButton",
+              },
+            }}
+          />
         </div>
 
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={loading}
-          className="mt-6 w-full py-4 px-4 bg-white/10 hover:bg-white/20 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
-        >
-          <Chrome className="w-5 h-5" />
-          Sign up with Google
-        </button>
-
-        <p className="mt-8 text-center text-gray-400">
+        <p className="mt-6 md:mt-8 text-center text-gray-400 text-sm md:text-base">
           Already have an account?{' '}
           <Link to="/login" className="text-blue-400 hover:text-blue-300 transition-colors">
             Sign In

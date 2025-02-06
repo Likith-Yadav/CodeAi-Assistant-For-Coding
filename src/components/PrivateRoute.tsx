@@ -1,12 +1,20 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
 }
 
 export default function PrivateRoute({ children }: PrivateRouteProps) {
-  const { currentUser } = useAuth();
+  const { userId, isLoaded } = useClerkAuth();
 
-  return currentUser ? <>{children}</> : <Navigate to="/login" />;
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!userId) {
+    return <Navigate to="/login" />;
+  }
+
+  return <>{children}</>;
 } 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Clock, Code2, Bug, Sparkles, X } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@clerk/clerk-react';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
@@ -24,7 +24,7 @@ interface ChatHistoryContentProps {
 }
 
 export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
-  const { currentUser } = useAuth();
+  const { userId } = useAuth();
   const [chats, setChats] = useState<ChatItem[]>([]);
 
   const getIcon = (type: string) => {
@@ -41,9 +41,9 @@ export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
   };
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!userId) return;
 
-    const chatsRef = collection(db, 'users', currentUser.uid, 'chats');
+    const chatsRef = collection(db, 'users', userId, 'chats');
     const q = query(chatsRef, orderBy('timestamp', 'desc'), limit(10));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -55,7 +55,7 @@ export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
     });
 
     return () => unsubscribe();
-  }, [currentUser]);
+  }, [userId]);
 
   return (
     <>
@@ -100,7 +100,7 @@ function ChatHistoryContent({ chats, getIcon }: ChatHistoryContentProps) {
           key={chat.id}
           to={`/${chat.type}/${chat.id}`}
           className={`block p-3 rounded-lg text-sm ${
-            location.pathname.includes(chat.id)
+            location.pathname.indexOf(chat.id) !== -1
               ? 'bg-blue-500/20 text-blue-400'
               : 'text-gray-400 hover:bg-gray-800/50'
           } transition-all`}

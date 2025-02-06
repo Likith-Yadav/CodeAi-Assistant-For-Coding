@@ -1,21 +1,12 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged,
-  User,
-  GoogleAuthProvider,
-  signInWithPopup
-} from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { createContext, useContext, ReactNode } from 'react';
+import { useAuth as useClerkAuth, useUser, SignIn, SignUp } from '@clerk/clerk-react';
 
 interface AuthContextType {
-  currentUser: User | null;
-  signup: (email: string, password: string) => Promise<any>;
-  login: (email: string, password: string) => Promise<any>;
+  currentUser: any;
+  signup: () => void;
+  login: () => void;
   logout: () => Promise<void>;
-  signInWithGoogle: () => Promise<any>;
+  signInWithGoogle: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -33,37 +24,30 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { isLoaded, signOut } = useClerkAuth();
+  const { user } = useUser();
 
-  function signup(email: string, password: string) {
-    return createUserWithEmailAndPassword(auth, email, password);
-  }
-
-  function login(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password);
-  }
-
-  function logout() {
-    return signOut(auth);
-  }
-
-  const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+  const signup = () => {
+    // Clerk handles signup UI
+    return <SignUp />;
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
+  const login = () => {
+    // Clerk handles login UI
+    return <SignIn />;
+  };
 
-    return unsubscribe;
-  }, []);
+  const logout = async () => {
+    await signOut();
+  };
+
+  const signInWithGoogle = () => {
+    // Clerk handles OAuth
+    return <SignIn />;
+  };
 
   const value = {
-    currentUser,
+    currentUser: user,
     signup,
     login,
     logout,
@@ -72,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {isLoaded && children}
     </AuthContext.Provider>
   );
 } 

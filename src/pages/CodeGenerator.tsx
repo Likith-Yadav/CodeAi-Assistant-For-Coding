@@ -4,14 +4,14 @@ import { generateCode } from '../lib/gemini';
 import { CodeBlock } from '../components/CodeBlock';
 import ReactMarkdown from 'react-markdown';
 import { saveChat } from '../lib/firebase';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@clerk/clerk-react';
 
 export default function CodeGenerator() {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { currentUser } = useAuth();
+  const { userId } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,12 +20,39 @@ export default function CodeGenerator() {
     try {
       setLoading(true);
       setError('');
-      const result = await generateCode(prompt);
+      
+      // Enhanced prompt to get structured implementation
+      const enhancedPrompt = `
+Please provide a detailed implementation guide for: ${prompt}
+
+Include the following sections:
+1. Project Setup:
+   - Required commands to create the project
+   - Essential dependencies to install
+
+2. Project Structure:
+   - Directory structure
+   - Key files needed
+   - File organization
+
+3. Implementation Steps:
+   - Step-by-step guide with code
+   - Detailed explanations for each component
+   - Configuration details if needed
+
+4. Additional Features:
+   - Suggestions for enhancements
+   - Best practices to follow
+
+Please provide actual code snippets for each implementation step.
+`;
+      
+      const result = await generateCode(enhancedPrompt);
       setResponse(result);
       
       // Save to chat history
-      if (currentUser) {
-        await saveChat(currentUser.uid, {
+      if (userId) {
+        await saveChat(userId, {
           type: 'generate',
           title: prompt.slice(0, 50) + (prompt.length > 50 ? '...' : ''),
           prompt,
@@ -52,8 +79,7 @@ export default function CodeGenerator() {
           AI Code Generator
         </h1>
         <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-          Transform your ideas into code. Describe what you want to build, and let AI generate the code for you.
-          Perfect for quickly creating components, functions, or entire features.
+          Transform your ideas into code. Describe what you want to build, and get a complete implementation guide with setup instructions and code.
         </p>
       </div>
 
@@ -64,7 +90,7 @@ export default function CodeGenerator() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="w-full h-32 md:h-48 bg-gray-950/70 border border-gray-800/50 rounded-2xl p-4 md:p-6 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all placeholder:text-gray-600 text-base md:text-lg"
-              placeholder="Example: Create a responsive navigation bar..."
+              placeholder="Example: Develop a todo list web application using react and make it fully functional"
             />
             <button 
               onClick={handleSubmit}
@@ -94,7 +120,7 @@ export default function CodeGenerator() {
 
         {response && (
           <div className={`p-6 rounded-2xl bg-gray-950/50 backdrop-blur-xl border border-gray-800/50 shadow-2xl shadow-blue-500/5 text-left`}>
-            <div className="prose prose-invert max-w-none">
+            <div className="prose prose-invert max-w-none prose-pre:my-0 prose-p:my-3 prose-headings:my-4">
               <ReactMarkdown
                 components={{
                   code: ({ node, inline, className, children, ...props }: any) => {

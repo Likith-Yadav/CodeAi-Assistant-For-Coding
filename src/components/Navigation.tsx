@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import { Code2, Sparkles, Bug, LogOut, Menu, X, Clock } from 'lucide-react';
 
 type NavigationProps = {
@@ -9,20 +9,21 @@ type NavigationProps = {
 };
 
 export default function Navigation({ showMobileChats, setShowMobileChats }: NavigationProps) {
-  const { currentUser, logout } = useAuth();
+  const { signOut } = useAuth();
+  const { user } = useUser();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       navigate('/');
     } catch (error) {
       console.error('Failed to logout', error);
     }
   };
 
-  if (!currentUser) return null;
+  if (!user) return null;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-950/80 backdrop-blur-xl border-b border-gray-800/50">
@@ -80,10 +81,10 @@ export default function Navigation({ showMobileChats, setShowMobileChats }: Navi
             <div className="flex items-center gap-4 pl-4 border-l border-gray-800">
               <div className="flex flex-col items-end">
                 <div className="text-sm font-medium text-gray-200">
-                  {currentUser.displayName || currentUser.email?.split('@')[0]}
+                  {user.fullName || user.username || user.primaryEmailAddress?.emailAddress?.split('@')[0]}
                 </div>
                 <div className="text-xs text-gray-400">
-                  {currentUser.email}
+                  {user.primaryEmailAddress?.emailAddress}
                 </div>
               </div>
               <button
@@ -124,10 +125,10 @@ export default function Navigation({ showMobileChats, setShowMobileChats }: Navi
                 <div className="pt-4 border-t border-gray-800">
                   <div className="flex flex-col items-start gap-2">
                     <div className="text-sm font-medium text-gray-200">
-                      {currentUser.displayName || currentUser.email?.split('@')[0]}
+                      {user.fullName || user.username || user.primaryEmailAddress?.emailAddress?.split('@')[0]}
                     </div>
                     <div className="text-xs text-gray-400">
-                      {currentUser.email}
+                      {user.primaryEmailAddress?.emailAddress}
                     </div>
                     <button
                       onClick={handleLogout}
