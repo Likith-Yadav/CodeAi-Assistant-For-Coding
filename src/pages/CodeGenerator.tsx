@@ -11,19 +11,13 @@ export default function CodeGenerator() {
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [codeType, setCodeType] = useState<'complete' | 'specific'>('specific');
   const { userId } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prompt.trim()) return;
-
-    try {
-      setLoading(true);
-      setError('');
-      
-      // Enhanced prompt to get structured implementation
-      const enhancedPrompt = `
-Please provide a detailed implementation guide for: ${prompt}
+  const getEnhancedPrompt = (userPrompt: string, type: 'complete' | 'specific') => {
+    if (type === 'complete') {
+      return `
+Please provide a complete implementation guide for: ${userPrompt}
 
 Include the following sections:
 1. Project Setup:
@@ -36,17 +30,40 @@ Include the following sections:
    - File organization
 
 3. Implementation Steps:
-   - Step-by-step guide with code
+   - Step-by-step guide with complete code for each file
    - Detailed explanations for each component
    - Configuration details if needed
 
-4. Additional Features:
-   - Suggestions for enhancements
-   - Best practices to follow
+4. Running Instructions:
+   - How to run the project
+   - Any environment setup needed
 
-Please provide actual code snippets for each implementation step.
+Please provide the complete code for each file with proper file paths and explanations.
 `;
+    }
+
+    return `
+Please provide the specific code implementation for: ${userPrompt}
+
+Include:
+- The relevant code snippet(s)
+- Brief explanation of the implementation
+- Any important context or dependencies needed
+- Where and how to use this code
+
+Focus on the specific functionality requested without full project setup.
+`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prompt.trim()) return;
+
+    try {
+      setLoading(true);
+      setError('');
       
+      const enhancedPrompt = getEnhancedPrompt(prompt, codeType);
       const result = await generateCode(enhancedPrompt);
       setResponse(result);
       
@@ -85,12 +102,37 @@ Please provide actual code snippets for each implementation step.
 
       <div className="space-y-6">
         <div className="p-6 rounded-2xl bg-gray-950/50 backdrop-blur-xl border border-gray-800/50 shadow-2xl shadow-blue-500/5">
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={() => setCodeType('specific')}
+              className={`px-4 py-2 rounded-xl ${
+                codeType === 'specific' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-800/50 text-gray-400'
+              }`}
+            >
+              Specific Code
+            </button>
+            <button
+              onClick={() => setCodeType('complete')}
+              className={`px-4 py-2 rounded-xl ${
+                codeType === 'complete' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-800/50 text-gray-400'
+              }`}
+            >
+              Complete Project
+            </button>
+          </div>
           <div className="relative w-full">
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="w-full h-32 md:h-48 bg-gray-950/70 border border-gray-800/50 rounded-2xl p-4 md:p-6 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all placeholder:text-gray-600 text-base md:text-lg"
-              placeholder="Example: Develop a todo list web application using react and make it fully functional"
+              placeholder={codeType === 'complete' 
+                ? "Example: Create a full-stack todo list application using React and Node.js"
+                : "Example: Add a dark mode toggle feature to a React component"
+              }
             />
             <button 
               onClick={handleSubmit}
