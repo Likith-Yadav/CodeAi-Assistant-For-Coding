@@ -18,10 +18,28 @@ interface ChatHistoryProps {
   onClose?: () => void;
 }
 
+interface ChatHistoryContentProps {
+  chats: ChatItem[];
+  getIcon: (type: string) => JSX.Element | null;
+}
+
 export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
   const { currentUser } = useAuth();
   const location = useLocation();
   const [chats, setChats] = useState<ChatItem[]>([]);
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'generate':
+        return <Code2 className="w-4 h-4" />;
+      case 'debug':
+        return <Bug className="w-4 h-4" />;
+      case 'suggest':
+        return <Sparkles className="w-4 h-4" />;
+      default:
+        return null;
+    }
+  };
 
   useEffect(() => {
     if (!currentUser) return;
@@ -40,24 +58,11 @@ export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
     return () => unsubscribe();
   }, [currentUser]);
 
-  const getIcon = (type: string) => {
-    switch (type) {
-      case 'generate':
-        return <Code2 className="w-4 h-4" />;
-      case 'debug':
-        return <Bug className="w-4 h-4" />;
-      case 'suggest':
-        return <Sparkles className="w-4 h-4" />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <>
       {/* Desktop sidebar */}
       <div className="w-64 h-screen border-r border-gray-800/50 bg-gray-950/50 backdrop-blur-xl fixed left-0 top-0 pt-20 overflow-y-auto hidden md:block">
-        <ChatHistoryContent chats={chats} />
+        <ChatHistoryContent chats={chats} getIcon={getIcon} />
       </div>
 
       {/* Mobile bottom sheet */}
@@ -77,7 +82,7 @@ export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
               </button>
             </div>
             <div className="p-4">
-              <ChatHistoryContent chats={chats} />
+              <ChatHistoryContent chats={chats} getIcon={getIcon} />
             </div>
           </div>
         </div>
@@ -86,7 +91,7 @@ export default function ChatHistory({ showMobile, onClose }: ChatHistoryProps) {
   );
 }
 
-function ChatHistoryContent({ chats }: { chats: ChatItem[] }) {
+function ChatHistoryContent({ chats, getIcon }: ChatHistoryContentProps) {
   const location = useLocation();
   
   return (
