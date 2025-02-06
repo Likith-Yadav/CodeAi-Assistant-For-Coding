@@ -1,10 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Code2, Sparkles, Bug, LogOut} from 'lucide-react';
+import { Code2, Sparkles, Bug, LogOut, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Navigation() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -30,7 +32,16 @@ export default function Navigation() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-6">
+          {/* Mobile menu button */}
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 text-gray-400 hover:text-white"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+
+          {/* Desktop menu */}
+          <div className="hidden md:flex items-center gap-6">
             <Link 
               to="/generate" 
               className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-800/50 transition-all text-gray-300 hover:text-white"
@@ -71,6 +82,52 @@ export default function Navigation() {
               </button>
             </div>
           </div>
+
+          {/* Mobile menu dropdown */}
+          {isOpen && (
+            <div className="absolute top-16 left-0 right-0 bg-gray-950/95 border-b border-gray-800/50 p-4 md:hidden">
+              <div className="flex flex-col space-y-4">
+                <Link 
+                  to="/generate" 
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-800/50"
+                >
+                  <Code2 className="w-5 h-5" />
+                  <span>Generate</span>
+                </Link>
+                <Link 
+                  to="/suggest" 
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-800/50"
+                >
+                  <Sparkles className="w-5 h-5" />
+                  <span>Suggest</span>
+                </Link>
+                <Link 
+                  to="/debug" 
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-800/50"
+                >
+                  <Bug className="w-5 h-5" />
+                  <span>Debug</span>
+                </Link>
+                <div className="pt-4 border-t border-gray-800">
+                  <div className="flex flex-col items-start gap-2">
+                    <div className="text-sm font-medium text-gray-200">
+                      {currentUser.displayName || currentUser.email?.split('@')[0]}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {currentUser.email}
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-2 px-4 py-2 text-red-400 hover:text-red-300"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>

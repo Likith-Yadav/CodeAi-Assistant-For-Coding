@@ -41,31 +41,31 @@ function Suggestions() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-12 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-yellow-500/20 mb-6">
-          <Lightbulb className="w-8 h-8 text-yellow-400" />
+    <div className="max-w-4xl mx-auto px-4 md:px-0">
+      <div className="mb-8 md:mb-12 text-center">
+        <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-yellow-500/20 mb-4 md:mb-6">
+          <Lightbulb className="w-6 h-6 md:w-8 md:h-8 text-yellow-400" />
         </div>
-        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
+        <h2 className="text-2xl md:text-3xl font-bold mb-2 md:mb-4 bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
           Get Code Suggestions
         </h2>
-        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-          Share your coding idea, and I'll provide implementation suggestions, best practices, and potential challenges to consider.
+        <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+          Share your coding idea, and I'll provide implementation suggestions.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mb-12">
+      <form onSubmit={handleSubmit} className="mb-8 md:mb-12">
         <div className="relative">
           <textarea
             value={idea}
             onChange={(e) => setIdea(e.target.value)}
-            placeholder="Describe your coding idea or project concept... (e.g., 'Building a real-time chat application with WebSocket')"
-            className="w-full h-40 p-6 rounded-2xl bg-gray-800/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:outline-none resize-none border border-gray-700 shadow-lg transition-all duration-300 focus:shadow-yellow-500/20"
+            placeholder="Describe your coding idea..."
+            className="w-full h-32 md:h-40 p-4 md:p-6 rounded-xl md:rounded-2xl bg-gray-800/50 text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:outline-none resize-none border border-gray-700 text-sm md:text-base"
           />
           <button
             type="submit"
             disabled={loading}
-            className="absolute right-4 bottom-4 px-6 py-3 rounded-xl bg-yellow-500 hover:bg-yellow-600 transition-all duration-300 disabled:opacity-50 disabled:hover:bg-yellow-500 transform hover:scale-105 active:scale-95 shadow-lg shadow-yellow-500/20"
+            className="absolute right-2 md:right-4 bottom-2 md:bottom-4 px-4 md:px-6 py-2 md:py-3 rounded-lg md:rounded-xl bg-yellow-500 text-sm md:text-base"
           >
             {loading ? (
               <div className="flex items-center space-x-2">

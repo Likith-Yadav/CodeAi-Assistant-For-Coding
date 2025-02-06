@@ -49,7 +49,7 @@ export default function ChatHistory() {
   };
 
   return (
-    <div className="w-64 h-screen border-r border-gray-800/50 bg-gray-950/50 backdrop-blur-xl fixed left-0 top-0 pt-20 overflow-y-auto">
+    <div className="w-64 h-screen border-r border-gray-800/50 bg-gray-950/50 backdrop-blur-xl fixed left-0 top-0 pt-20 overflow-y-auto hidden md:block">
       <div className="p-4">
         <div className="flex items-center gap-2 text-gray-400 mb-4">
           <Clock className="w-4 h-4" />

@@ -63,13 +63,13 @@ export default function CodeGenerator() {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="w-full h-48 bg-gray-950/70 border border-gray-800/50 rounded-2xl p-6 text-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent transition-all placeholder:text-gray-600 text-lg font-mono"
-              placeholder="Example: Create a responsive navigation bar with a logo, links, and a mobile menu..."
+              className="w-full h-32 md:h-48 bg-gray-950/70 border border-gray-800/50 rounded-2xl p-4 md:p-6 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all placeholder:text-gray-600 text-base md:text-lg"
+              placeholder="Example: Create a responsive navigation bar..."
             />
             <button 
               onClick={handleSubmit}
               disabled={loading}
-              className="absolute right-4 bottom-4 px-6 py-3 bg-blue-600 rounded-xl font-semibold text-lg shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 flex items-center gap-2"
+              className="absolute right-2 md:right-4 bottom-2 md:bottom-4 px-4 md:px-6 py-2 md:py-3 bg-blue-600 rounded-xl font-semibold text-base md:text-lg shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 flex items-center gap-2"
             >
               {loading ? (
                 <>
