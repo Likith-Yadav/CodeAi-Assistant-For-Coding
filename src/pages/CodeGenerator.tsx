@@ -43,15 +43,30 @@ Please provide the complete code for each file with proper file paths and explan
     }
 
     return `
-Please provide the specific code implementation for: ${userPrompt}
+Please provide the complete implementation for: ${userPrompt}
 
 Include:
-- The relevant code snippet(s)
-- Brief explanation of the implementation
-- Any important context or dependencies needed
-- Where and how to use this code
+1. Implementation Details:
+   - Full code implementation of the requested feature
+   - All necessary functions and components
+   - Any required imports or dependencies
 
-Focus on the specific functionality requested without full project setup.
+2. Integration Guide:
+   - Where to place the code
+   - How to integrate with existing codebase
+   - Any required configuration
+
+3. Usage Example:
+   - Example of how to use the implemented code
+   - Sample usage scenarios
+   - Any props or parameters needed
+
+4. Additional Context:
+   - Important considerations
+   - Best practices for this implementation
+   - Any potential edge cases to handle
+
+Please provide the complete working code with proper explanations.
 `;
   };
 
